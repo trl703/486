@@ -17,6 +17,7 @@ ggplot(faithful, aes(x = waiting))+
   ggtitle("Box Plot of Next Eruption Time") + 
   xlab("Waiting Time in Minutes") + 
   theme(axis.text.y= element_blank(), axis.ticks = element_blank())
+ggsave("1a.jpeg", width = 6, height = 4)
 ```
 ```{r}
 ggplot(faithful, aes(x = waiting)) + 
@@ -24,6 +25,7 @@ ggplot(faithful, aes(x = waiting)) +
   ggtitle("Histogram of Next Eruption Time")+
   xlab("Waiting Time in Minutes")+ 
   theme(axis.title.y= element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank())
+ggsave("1b.jpeg", width = 6, height = 4)
 ```
 ```{r}
 ggplot(faithful, aes(x = waiting)) + 
@@ -31,6 +33,7 @@ ggplot(faithful, aes(x = waiting)) +
  ggtitle("Density Plot of Next Eruption Time")+ 
   xlab("Waiting Time in Minutes")+ 
   theme(axis.text.y= element_blank(), axis.ticks = element_blank(), axis.title.y = element_blank())
+ggsave("1c.jpeg", width = 6, height = 4)
 ```
 ```{r}
 ggplot(faithful, aes(x = waiting, y = 1)) + # note the y = 1
@@ -38,7 +41,7 @@ ggplot(faithful, aes(x = waiting, y = 1)) + # note the y = 1
    ggtitle("Violin Plot of Next Eruption Time")+
   xlab("Waiting Time in Minutes")+ 
   theme(axis.text.y= element_blank(),axis.title.y= element_blank(), axis.ticks = element_blank())
-
+ggsave("1d.jpeg", width = 6, height = 4)
 ```
 <br>2.
 ```{r}
@@ -47,6 +50,7 @@ ggplot(faithful, aes(x = eruptions, y = waiting)) +
   ggtitle("Scatterplot of Eruption Time by Waiting Time")+
   xlab("Eruption Time in Minutes")+
   ylab("Waiting Time in Minutes")
+ggsave("2a.jpeg", width = 6, height = 4)
 ```
 ```{r}
 ggplot(faithful, aes(eruptions, waiting)) +
@@ -56,13 +60,14 @@ ggplot(faithful, aes(eruptions, waiting)) +
   xlab("Eruption Time in Minutes")+
   ylab("Waiting Time in Minutes")+
   guides(fill=guide_legend(title="Count"))
+ggsave("2b.jpeg", width = 6, height = 4)
 ```
 
 ```{r}
 library("hexbin")
 bin<-hexbin(faithful$eruptions, faithful$waiting, xbins=10)
 plot(bin, main="2D Histogram (Hex Grid) of Eruption Time by Waiting Time", xlab = "Eruption Time in Minutes", ylab = "Waiting Time in Minutes",colramp=colorRampPalette(c("Pink",'Deeppink4')), legend=1 ) 
-
+ggsave("2c.jpeg", width = 6, height = 4)
 ```
 
 ```{r}
@@ -71,7 +76,7 @@ ggplot(faithful,aes(waiting,eruptions))+
   ggtitle("Contour Plot of Eruption Time by Waiting Time")+
   xlab("Eruption Time in Minutes")+
   ylab("Waiting Time in Minutes")
-  
+ggsave("2d.jpeg", width = 6, height = 4)
 ```
 
 
@@ -82,6 +87,7 @@ ggplot(faithful, aes(x = eruptions, y = waiting, fill = ..level..))+
   ggtitle("Density Plot of Eruption Time by Waiting Time")+
   xlab("Eruption Time in Minutes")+
   ylab("Waiting Time in Minutes")
+ggsave("2e.jpeg", width = 6, height = 4)
 ```
 ```{r}
 ggplot(faithful, aes(x = eruptions, y = waiting)) +
@@ -92,11 +98,12 @@ ggplot(faithful, aes(x = eruptions, y = waiting)) +
   xlab("Eruption Time in Minutes")+
   ylab("Waiting Time in Minutes")+
   theme(legend.position = "none")
+ggsave("2f.jpeg", width = 6, height = 4)
 ```
 
 
 
-
+<br>3.
 ```{r, include=FALSE}
 library("Sleuth3")
 library("dplyr")
@@ -130,6 +137,29 @@ ggplot(d, aes(SO2, Yield))+
   xlab("SO2")+
   ylab("Yield in Kg")+
   facet_wrap(~Stress)
+ggsave("3b.jpeg", width = 6, height = 4)
+```
 
+```{r, include=FALSE}
+?WorldPhones
+head(WorldPhones)
+library(tidyr)
+library(tibble)
+phone<- as.data.frame(WorldPhones) %>%
+  rownames_to_column("Year") %>%
+  pivot_longer(cols=-Year, names_to ="Country") 
+phone$value <- as.numeric(phone$value)
 
 ```
+<br> 4.
+```{r}
+ggplot(phone, aes(x=Year, y=value, group = Country)) +
+  geom_line(aes(linetype=Country),color="deeppink4")+
+    ggtitle("Amount of Telephones (in thousands) Based on Year")+
+    xlab("Year")+
+    ylab("Telephones (in thousands)")
+ggsave("4.jpeg", width = 6, height = 4)
+```
+
+
+
