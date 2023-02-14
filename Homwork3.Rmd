@@ -4,35 +4,132 @@ author: "Tracie-Lynn Lamoreux"
 date: "2023-02-06"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
+ 
+```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("ggplot2")
 ?faithful
-
-boxplot = ggplot(faithful, aes(x = waiting)) + 
-  geom_boxplot(fill="deeppink4", color = "indianred3")
-boxplot
+```
+1.
+```{r}
+ggplot(faithful, aes(x = waiting))+ 
+  geom_boxplot(fill="deeppink4", color = "indianred3")+   
+  ggtitle("Box Plot of Next Eruption Time") + 
+  xlab("Waiting Time in Minutes") + 
+  theme(axis.text.y= element_blank(), axis.ticks = element_blank())
 ```
 ```{r}
 ggplot(faithful, aes(x = waiting)) + 
-  geom_histogram(binwidth = 20)
+  geom_histogram(binwidth = 20,fill="deeppink4", color = "indianred3")+   
+  ggtitle("Histogram of Next Eruption Time")+
+  xlab("Waiting Time in Minutes")+ 
+  theme(axis.title.y= element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank())
 ```
 ```{r}
 ggplot(faithful, aes(x = waiting)) + 
-  geom_density()
+  geom_density(fill="deeppink4", color = "indianred3")+
+ ggtitle("Density Plot of Next Eruption Time")+ 
+  xlab("Waiting Time in Minutes")+ 
+  theme(axis.text.y= element_blank(), axis.ticks = element_blank(), axis.title.y = element_blank())
 ```
 ```{r}
 ggplot(faithful, aes(x = waiting, y = 1)) + # note the y = 1
-  geom_violin()
+  geom_violin(fill = "indianred3",color="deeppink4")+
+   ggtitle("Violin Plot of Next Eruption Time")+
+  xlab("Waiting Time in Minutes")+ 
+  theme(axis.text.y= element_blank(),axis.title.y= element_blank(), axis.ticks = element_blank())
+
 ```
+<br>2.
 ```{r}
 ggplot(faithful, aes(x = eruptions, y = waiting)) + 
-  geom_jitter(width=0.1)
+  geom_jitter(width=0.1,colour="deeppink4") +
+  ggtitle("Scatterplot of Eruption Time by Waiting Time")+
+  xlab("Eruption Time in Minutes")+
+  ylab("Waiting Time in Minutes")
 ```
 ```{r}
-d <- ggplot(faithful, aes(eruptions, waiting)) +
+ggplot(faithful, aes(eruptions, waiting)) +
   stat_bin_2d(position="jitter",bins=20) +
-  scale_fill_gradient(low = "pink", high = "deeppink4")
+  scale_fill_gradient(low = "pink", high = "deeppink4")+
+  ggtitle("2D Histogram (Square Grid) of Eruption Time by Waiting Time")+
+  xlab("Eruption Time in Minutes")+
+  ylab("Waiting Time in Minutes")+
+  guides(fill=guide_legend(title="Count"))
+```
+
+```{r}
+library("hexbin")
+bin<-hexbin(faithful$eruptions, faithful$waiting, xbins=10)
+plot(bin, main="2D Histogram (Hex Grid) of Eruption Time by Waiting Time", xlab = "Eruption Time in Minutes", ylab = "Waiting Time in Minutes",colramp=colorRampPalette(c("Pink",'Deeppink4')), legend=1 ) 
+
+```
+
+```{r}
+ggplot(faithful,aes(waiting,eruptions))+
+  geom_density_2d(color="deeppink4")+
+  ggtitle("Contour Plot of Eruption Time by Waiting Time")+
+  xlab("Eruption Time in Minutes")+
+  ylab("Waiting Time in Minutes")
+  
+```
+
+
+```{r}
+ggplot(faithful, aes(x = eruptions, y = waiting, fill = ..level..))+
+  geom_density_2d_filled(alpha = 1)+
+  theme(legend.position = "none")+
+  ggtitle("Density Plot of Eruption Time by Waiting Time")+
+  xlab("Eruption Time in Minutes")+
+  ylab("Waiting Time in Minutes")
+```
+```{r}
+ggplot(faithful, aes(x = eruptions, y = waiting)) +
+  geom_point() +
+  geom_density_2d_filled(alpha = 0.4) +
+  geom_density_2d(colour = "deeppink4")+
+  ggtitle("Density Plot & Contour of Eruption Time by Waiting Time")+
+  xlab("Eruption Time in Minutes")+
+  ylab("Waiting Time in Minutes")+
+  theme(legend.position = "none")
+```
+
+
+
+
+```{r, include=FALSE}
+library("Sleuth3")
+library("dplyr")
+library("tidyr")
+d <- Sleuth3::case1402 %>%
+  pivot_longer(Forrest:William, names_to = "variety", values_to = "yield")
+library("tidyverse")
+d<- d %>% 
+  rename(Variety=variety,
+         Yield = yield
+         )
 d
+```
+
+```{r}
+ggplot(d, aes(O3, Yield))+
+  geom_point(aes(colour = Variety))+
+   ggtitle("Relationship Between Yield and O3 by Stress Levels")+
+  geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
+                     aes(color=Variety))+
+  xlab("O3")+
+  ylab("Yield in Kg")+
+  facet_wrap(~Stress)
+
+
+ggplot(d, aes(SO2, Yield))+
+  geom_point(aes(colour = Variety))+
+  ggtitle("Relationship Between Yield and SO2 by Stress Levels")+
+  geom_smooth(method=lm,se=FALSE,fullrange=TRUE,
+                     aes(color=Variety))+
+  xlab("SO2")+
+  ylab("Yield in Kg")+
+  facet_wrap(~Stress)
+
+
 ```
